@@ -34,7 +34,7 @@ pipeline {
             steps {
                 sh """
                 git clone ${GITOPS_REPO} gitops
-                cd gitops/k8s
+                cd gitops
                 sed -i "s|${REGISTRY}/${IMAGE_NAME}:.*|${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}|g" deployment.yaml
                 git config --global user.email "jenkins@example.com"
                 git config --global user.name "jenkins"
