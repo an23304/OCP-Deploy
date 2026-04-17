@@ -17,7 +17,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 sh """
-                sudo podman build -t ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} .
+                sudo podman build -t ${REGISTRY}/${IMAGE_NAME}:latest .
                 """
             }
         }
@@ -25,7 +25,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 sh """
-                sudo podman push ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}
+               	sudo podman push ${REGISTRY}/${IMAGE_NAME}:latest
                 """
             }
         }
@@ -33,13 +33,14 @@ pipeline {
         stage('Update GitOps Manifest') {
             steps {
                 sh """
+                rm -rf gitops
                 git clone ${GITOPS_REPO} gitops
                 cd gitops
-                sed -i "s|${REGISTRY}/${IMAGE_NAME}:.*|${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}|g" deployment.yaml
+                sed -i "s|${REGISTRY}/${IMAGE_NAME}:.*|${REGISTRY}/${IMAGE_NAME}:latest|g" deployment.yaml
                 git config --global user.email "jenkins@example.com"
                 git config --global user.name "jenkins"
                 git add deployment.yaml
-                git commit -m "Update image to build ${BUILD_NUMBER}"
+                git commit -m "Update manifest to latest image"
                 git push origin main
                 """
             }
