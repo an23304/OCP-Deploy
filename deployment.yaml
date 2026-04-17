@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-lab
+  namespace: jenkins-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins-lab
+  template:
+    metadata:
+      labels:
+        app: jenkins-lab
+    spec:
+      containers:
+      - name: jenkins-lab
+        image: mirror-registry.test.vn:8443/jenkins-lab:latest
+        ports:
+        - containerPort: 8080
+
